@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/integrations", label: "Integrations" },
   { href: "/use-cases", label: "Use Cases" },
   { href: "/about", label: "About" },
+  { href: "/get-started", label: "Get Started" },
 ];
 
 export default function Header() {

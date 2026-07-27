@@ -21,10 +21,23 @@ npm run lint    # ESLint
 
 ## Structure
 
-- `src/app/` — one folder per route (`platform`, `security`, `integrations`, `use-cases`, `about`, `contact`, `privacy`, `terms`, `thank-you`), plus `layout.tsx` for the shared shell and `not-found.tsx` for 404s
-- `src/components/` — shared UI: `Header`, `Footer`, and the client components handling scroll reveals, dashboard tabs, the hero tilt effect and the demo request form
-- `src/app/globals.css` — the full stylesheet
+The app splits into two route groups, which is why the dashboard has no marketing nav:
+
+- `src/app/(site)/` — the marketing site (`platform`, `security`, `integrations`, `use-cases`, `about`, `contact`, `privacy`, `terms`, `thank-you`). Its layout supplies the header, footer and scroll reveals.
+- `src/app/(app)/` — the product (`get-started`, `dashboard`). Its layout supplies a minimal header instead.
+- `src/app/api/` — route handlers for Slack OAuth, the Slack proxy, and AI email summaries.
+- `src/components/` — shared UI; `components/dashboard/` holds the dashboard.
+- `src/lib/dashboard/` — the Google, Slack and Microsoft data loaders, plus formatting and triage helpers.
+- `src/app/globals.css` — marketing styles. `src/styles/dashboard.css` is scoped under `.aide-dashboard` so its palette can't leak into the marketing pages.
 - `public/` — logos, `robots.txt`, `sitemap.xml`, `site.webmanifest`
+
+## Dashboard
+
+`/get-started` collects a short intake and stores it in `localStorage` (nothing is sent anywhere); `/dashboard` reads it to personalise the greeting.
+
+The dashboard connects to Google (Gmail, Calendar, Drive), Slack and Microsoft (Outlook, Calendar, OneDrive) **from the browser**. Tokens live in memory for the session only — reload and you reconnect. No workplace data is stored server-side.
+
+Each connector needs credentials before its Connect button activates; see `.env.example` for what to set and where to get it. Without an `ANTHROPIC_API_KEY`, email triage still works using free client-side heuristics — the AI summaries just stay off.
 
 ## Demonstration request form
 
@@ -39,6 +52,7 @@ Submissions appear under **Forms** in the Netlify site dashboard. If the site mo
 3. Replace the example domain in `public/sitemap.xml`.
 4. Confirm the final production contact details.
 5. Add the production sitemap URL to `public/robots.txt`.
-6. Test the final deployment using keyboard navigation, mobile devices and a current accessibility audit.
+6. Set the environment variables from `.env.example` in Netlify, and register the production URL as an allowed origin / redirect URI with Google, Slack and Azure.
+7. Test the final deployment using keyboard navigation, mobile devices and a current accessibility audit.
 
 The supplied Aide Intelligence logo files are used without redesign.

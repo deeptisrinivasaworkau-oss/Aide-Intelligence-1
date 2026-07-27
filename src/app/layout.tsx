@@ -1,7 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ScrollReveal from "@/components/ScrollReveal";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,15 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body>
-        <a className="skip-link" href="#main">
-          Skip to content
-        </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        <ScrollReveal />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

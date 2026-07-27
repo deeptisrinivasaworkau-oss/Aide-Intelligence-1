@@ -1,0 +1,474 @@
+/* Dashboard styles. Every rule is scoped under .aide-dashboard so the palette
+   variables and generic class names (.row, .panel, .stat) can't leak into the
+   marketing stylesheet in globals.css, which defines some of the same names. */
+
+.aide-dashboard {
+  --bg: #05060f;
+  --bg-2: #090b1a;
+  --panel: rgba(20, 24, 52, 0.55);
+  --panel-solid: #0e1124;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --ink: #eceefb;
+  --muted: #8b90ad;
+  --faint: #5b6080;
+  --teal: #00bfa6;
+  --coral: #ff6d68;
+  --amber: #ffb409;
+  --accent: linear-gradient(120deg, #8a25ff, #006bdf);
+
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 620px at 78% -8%, rgba(138, 37, 255, 0.16), transparent 60%),
+    radial-gradient(900px 560px at 8% 4%, rgba(0, 107, 223, 0.14), transparent 55%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+  background-attachment: fixed;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.aide-dashboard .wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 26px 70px;
+}
+
+/* ---- Hero ---- */
+.aide-dashboard .hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 30px 26px 6px;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.aide-dashboard .hero-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.aide-dashboard .hero-mark {
+  width: 40px;
+  height: auto;
+  flex-shrink: 0;
+}
+.aide-dashboard .hero-eyebrow {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.aide-dashboard .hero-text h1 {
+  color: #fff;
+  font-size: 26px;
+  margin: 4px 0 0;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+}
+.aide-dashboard .hero-text .tagline {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+.aide-dashboard .hero-right {
+  text-align: right;
+  font-size: 12px;
+  color: var(--muted);
+}
+.aide-dashboard .refresh-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--teal);
+  margin-right: 6px;
+  box-shadow: 0 0 8px var(--teal);
+}
+.aide-dashboard .home-link {
+  color: #9db4ff;
+  font-size: 12.5px;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+/* ---- Section labels ---- */
+.aide-dashboard .section-label {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 28px 4px 12px;
+  font-weight: 600;
+}
+
+/* ---- Connections accordion ---- */
+.aide-dashboard .connections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.aide-dashboard .provider {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+}
+.aide-dashboard .provider-head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 18px;
+  width: 100%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+.aide-dashboard .provider-head:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.aide-dashboard .provider-logo {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 9px;
+}
+.aide-dashboard .provider-logo svg {
+  width: 22px;
+  height: 22px;
+}
+.aide-dashboard .provider-title {
+  flex: 1;
+}
+.aide-dashboard .provider-title {
+  display: block;
+}
+.aide-dashboard .p-name {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 650;
+}
+.aide-dashboard .p-sub {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+.aide-dashboard .p-sub.on {
+  color: var(--teal);
+}
+.aide-dashboard .provider-chevron {
+  font-size: 12px;
+  color: var(--faint);
+  transition: transform 0.18s ease;
+}
+.aide-dashboard .provider.open .provider-chevron {
+  transform: rotate(180deg);
+}
+.aide-dashboard .provider-body {
+  border-top: 1px solid var(--border);
+}
+.aide-dashboard .service-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.aide-dashboard .service-row:last-child {
+  border-bottom: none;
+}
+.aide-dashboard .svc-logo {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 6px;
+}
+.aide-dashboard .svc-logo svg {
+  width: 18px;
+  height: 18px;
+}
+.aide-dashboard .svc-name {
+  flex: 1;
+  font-size: 13px;
+}
+.aide-dashboard .service-row.soon .svc-name,
+.aide-dashboard .service-row.soon .svc-logo {
+  opacity: 0.5;
+}
+.aide-dashboard .conn-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.aide-dashboard .conn-btn.connected {
+  background: none;
+  border: 1px solid var(--border-strong);
+  color: var(--teal);
+}
+.aide-dashboard .conn-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.aide-dashboard .soon-tag {
+  font-size: 10.5px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 4px 11px;
+  white-space: nowrap;
+}
+.aide-dashboard .config-warning {
+  font-size: 11.5px;
+  color: #ffb4b0;
+  background: rgba(255, 109, 104, 0.12);
+  border: 1px solid rgba(255, 109, 104, 0.25);
+  border-radius: 10px;
+  padding: 9px 13px;
+  margin: 10px 14px 4px;
+}
+
+/* ---- KPI stat cards ---- */
+.aide-dashboard .stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.aide-dashboard .stat {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px 20px;
+  backdrop-filter: blur(6px);
+}
+.aide-dashboard .stat .label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.aide-dashboard .stat .num {
+  font-size: 34px;
+  font-weight: 720;
+  margin-top: 10px;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.aide-dashboard .stat .bar {
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-top: 16px;
+  overflow: hidden;
+}
+.aide-dashboard .stat .bar > i {
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: var(--accent);
+}
+
+/* ---- Panels ---- */
+.aide-dashboard .panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+.aide-dashboard .panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.aide-dashboard .panel-head h2 {
+  font-size: 14px;
+  margin: 0;
+  font-weight: 650;
+}
+.aide-dashboard .panel-head .meta {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.aide-dashboard .row {
+  display: flex;
+  gap: 13px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+  color: inherit;
+}
+.aide-dashboard .row:last-child {
+  border-bottom: none;
+}
+.aide-dashboard .row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.aide-dashboard .row:hover .subject,
+.aide-dashboard .row:hover .sender {
+  color: #fff;
+}
+.aide-dashboard .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(138, 37, 255, 0.18);
+  color: #c9b4ff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.aide-dashboard .row .content {
+  flex: 1;
+  min-width: 0;
+}
+.aide-dashboard .top-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.aide-dashboard .sender {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+.aide-dashboard .row .date {
+  font-size: 11.5px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+.aide-dashboard .subject {
+  font-size: 13px;
+  margin-top: 2px;
+  color: #c3c7de;
+}
+.aide-dashboard .snippet {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aide-dashboard .summary {
+  font-style: italic;
+  font-size: 12.5px;
+  color: #b7bcd6;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aide-dashboard .verdict {
+  font-size: 12px;
+  color: #a98bff;
+  font-weight: 600;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aide-dashboard .badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+.aide-dashboard .badge.unread {
+  background: rgba(0, 107, 223, 0.2);
+  color: #7db2ff;
+}
+.aide-dashboard .badge.important {
+  background: rgba(255, 180, 9, 0.16);
+  color: var(--amber);
+  margin-left: 6px;
+}
+.aide-dashboard .filetype {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--muted);
+  flex-shrink: 0;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+.aide-dashboard .owner-tag {
+  font-size: 11.5px;
+  color: var(--faint);
+}
+
+.aide-dashboard .empty,
+.aide-dashboard .locked,
+.aide-dashboard .spinner {
+  padding: 30px 18px;
+  text-align: center;
+  color: var(--faint);
+  font-size: 13px;
+}
+.aide-dashboard .error {
+  padding: 16px;
+  color: #ffb4b0;
+  font-size: 13px;
+  background: rgba(255, 109, 104, 0.12);
+  border-radius: 10px;
+  margin: 12px 18px;
+}
+.aide-dashboard .footer-note {
+  font-size: 11.5px;
+  color: var(--faint);
+  text-align: center;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .aide-dashboard .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .aide-dashboard .stats {
+    grid-template-columns: 1fr;
+  }
+  .aide-dashboard .wrap {
+    padding: 0 16px 50px;
+  }
+  .aide-dashboard .hero {
+    padding: 24px 16px 6px;
+  }
+}

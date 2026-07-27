@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Replace example.com with the production domain before deployment. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://example.com/</loc></url>
+  <url><loc>https://example.com/platform</loc></url>
+  <url><loc>https://example.com/security</loc></url>
+  <url><loc>https://example.com/integrations</loc></url>
+  <url><loc>https://example.com/use-cases</loc></url>
+  <url><loc>https://example.com/about</loc></url>
+  <url><loc>https://example.com/contact</loc></url>
+</urlset>

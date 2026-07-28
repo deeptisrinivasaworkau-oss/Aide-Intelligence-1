@@ -90,7 +90,20 @@
   color: #9db4ff;
   font-size: 12.5px;
   display: inline-block;
+}
+.aide-dashboard .hero-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
   margin-top: 6px;
+}
+.aide-dashboard .app-signout {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.aide-dashboard .app-signout:hover {
+  color: #fff;
 }
 
 /* ---- Section labels ---- */

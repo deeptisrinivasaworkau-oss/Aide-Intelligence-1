@@ -34,6 +34,7 @@ import type {
   SlackItem,
 } from "@/lib/dashboard/types";
 import { readIntake } from "@/lib/intake";
+import SignOutLink from "@/components/SignOutLink";
 import {
   EventRows,
   FileRows,
@@ -430,9 +431,12 @@ export default function Dashboard() {
             <span className="refresh-dot" />
             Live · customer environment
           </div>
-          <Link className="home-link" href="/">
-            &larr; Back to site
-          </Link>
+          <div className="hero-links">
+            <SignOutLink />
+            <Link className="home-link" href="/">
+              &larr; Back to site
+            </Link>
+          </div>
         </div>
       </div>
 

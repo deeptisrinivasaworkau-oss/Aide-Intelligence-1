@@ -23,12 +23,43 @@
   font-weight: 700;
   font-size: 16px;
 }
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
 .app-back {
   font-size: 13px;
   color: var(--muted);
 }
 .app-back:hover {
   color: #fff;
+}
+.app-signout {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.intake-wrap-narrow {
+  width: min(calc(100% - 48px), 420px);
+}
+
+.demo-banner {
+  margin: 0 0 28px;
+  padding: 12px 14px;
+  border: 1px solid rgba(240, 189, 107, 0.25);
+  border-radius: 10px;
+  background: rgba(240, 189, 107, 0.06);
+  color: #cbb488;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.demo-banner strong {
+  color: #e4cfa4;
 }
 
 /* ---- Get started intake ---- */
@@ -61,6 +92,7 @@
 }
 .intake-form input[type="text"],
 .intake-form input[type="email"],
+.intake-form input[type="password"],
 .intake-form textarea {
   width: 100%;
   padding: 12px 14px;

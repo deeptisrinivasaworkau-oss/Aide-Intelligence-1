@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AppHeader from "@/components/AppHeader";
+import AuthGate from "@/components/AuthGate";
 import IntakeForm from "@/components/IntakeForm";
 
 const description =
@@ -13,11 +14,11 @@ export const metadata: Metadata = {
 
 export default function GetStartedPage() {
   return (
-    <>
+    <AuthGate>
       <AppHeader />
       <div className="intake-wrap">
         <IntakeForm />
       </div>
-    </>
+    </AuthGate>
   );
 }

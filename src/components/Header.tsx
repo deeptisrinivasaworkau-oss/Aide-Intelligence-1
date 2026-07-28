@@ -5,12 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Platform, Security, Integrations and Use Cases still exist and are still
+// linked from the footer — they're out of the top nav to keep it minimal.
 const navLinks = [
-  { href: "/platform", label: "Platform" },
-  { href: "/security", label: "Security" },
-  { href: "/integrations", label: "Integrations" },
-  { href: "/use-cases", label: "Use Cases" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Demonstration" },
   { href: "/login", label: "Sign In" },
 ];
 
@@ -18,6 +17,10 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  // The homepage hero sits behind the header, so it starts transparent there
+  // and only frosts once you scroll past it. Every other page frosts at once.
+  const overHero = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -27,7 +30,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`site-header${scrolled ? " scrolled" : ""}`}>
+    <header
+      className={`site-header${scrolled || !overHero ? " scrolled" : ""}${overHero ? " over-hero" : ""}`}
+    >
       <div className="shell header-inner">
         <Link className="brand" href="/" aria-label="Aide Intelligence home">
           <Image
@@ -64,14 +69,6 @@ export default function Header() {
               {label}
             </Link>
           ))}
-          <Link
-            className="button button-small"
-            href="/contact"
-            aria-current={pathname === "/contact" ? "page" : undefined}
-            onClick={() => setOpen(false)}
-          >
-            Request a Demonstration
-          </Link>
         </nav>
       </div>
     </header>

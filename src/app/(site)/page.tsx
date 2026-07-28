@@ -1,48 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import ProductStage from "@/components/ProductStage";
+import CinematicHero from "@/components/CinematicHero";
 import DashboardTabs from "@/components/DashboardTabs";
 
 export default function Home() {
   return (
     <>
-      <section className="hero home-hero" id="top">
-        <div className="hero-aurora" aria-hidden="true"></div>
-        <div className="hero-grid-lines" aria-hidden="true"></div>
-        <div className="shell hero-layout">
-          <div className="hero-copy reveal">
-            <p className="eyebrow">
-              <span></span> Secure executive intelligence
-            </p>
-            <h1>
-              Know what matters,
-              <br />
-              <em>when it matters.</em>
-            </h1>
-            <p className="lede">
-              Aide Intelligence brings workplace activity, operational signals
-              and relevant external intelligence into a secure executive
-              view&mdash;without taking control of your organisation&rsquo;s raw
-              data.
-            </p>
-            <div className="actions">
-              <Link className="button" href="/contact">
-                Request a Demonstration <span aria-hidden="true">↗</span>
-              </Link>
-              <Link className="secondary-button" href="/platform">
-                Explore the Platform
-              </Link>
-            </div>
-            <div className="hero-assurance" aria-label="Platform assurances">
-              <span>Customer-controlled</span>
-              <span>Privacy-conscious</span>
-              <span>Power BI delivery</span>
-            </div>
-          </div>
-
-          <ProductStage />
-        </div>
-      </section>
+      <CinematicHero />
 
       <section className="trust-strip" aria-label="Aide Intelligence principles">
         <div className="shell trust-strip-inner">

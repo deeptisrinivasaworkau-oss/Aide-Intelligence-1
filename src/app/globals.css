@@ -47,3 +47,18 @@
 .brand img.brand-mark{width:30px;height:auto}
 .brand-word{font-size:17px;font-weight:600;letter-spacing:-.017em;color:#fff;white-space:nowrap}
 @media(max-width:620px){.brand img.brand-mark{width:26px}.brand-word{font-size:15.5px}}
+
+/* --- Display typography -------------------------------------------------- */
+/* Instrument Serif carries every display heading, not just the hero, so the
+   page reads as one system. Instrument Serif ships a single 400 weight, so the
+   old 570-ish weights are reset rather than being synthesised into a faux bold.
+   Body copy, nav and UI stay on Inter. */
+.hero h1,.interior-hero h1,.contact-hero h1,.legal-hero h1,
+.section-heading h2,.final-cta h2,.responsible-page h2,
+.security-principle p,.about-statement p{
+  font-family:var(--font-display),Georgia,serif;
+  font-weight:400;
+  letter-spacing:-.022em
+}
+.section-heading h2 em,.final-cta h2 em,.hero h1 em,
+.interior-hero h1 em,.contact-hero h1 em{font-style:italic}

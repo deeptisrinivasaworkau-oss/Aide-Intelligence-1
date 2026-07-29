@@ -11,6 +11,8 @@ import ThemeToggle from "./ThemeToggle";
 const navLinks = [
   { href: "/platform", label: "Features" },
   { href: "/pricing", label: "Pricing" },
+  // Enters the same gated path as the old Netlify build: login -> intake -> dashboard.
+  { href: "/dashboard", label: "My Dashboard" },
 ];
 
 export default function Header() {

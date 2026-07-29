@@ -41,9 +41,9 @@ export default function Home() {
             <em>Built from the systems you already use.</em>
           </h2>
           <p>
-            Aide Intelligence structures selected workplace activity,
-            operational data and relevant external information into a clear
-            executive intelligence layer.
+            An executive control layer, not another system of record. It connects
+            authorised sources, applies rules and classification, then presents
+            source-linked priorities, deadlines and exceptions.
           </p>
         </div>
         <DashboardTabs />
@@ -60,9 +60,9 @@ export default function Home() {
             <em>A defined data boundary.</em>
           </h2>
           <p>
-            The software operates within the customer&rsquo;s authorised
-            environment. Raw workplace data is not transferred to Aide
-            Intelligence.
+            The platform runs against the systems you authorise, with read-only
+            scopes and credentials held in a customer-controlled vault. Your
+            systems stay the systems of record.
           </p>
         </div>
         <div className="shell architecture-map reveal">
@@ -106,7 +106,7 @@ export default function Home() {
               <i></i>
               <i></i>
             </div>
-            <h3>Your Power BI dashboard</h3>
+            <h3>Your executive brief</h3>
             <p>Executive intelligence and decision support</p>
             <small>Customer-defined users and access</small>
           </div>
@@ -117,8 +117,7 @@ export default function Home() {
             <span>Data boundary</span>
           </div>
           <p>
-            &ldquo;Aide Intelligence does not receive, inspect or store the
-            customer&rsquo;s raw workplace data.&rdquo;
+            &ldquo;Your systems remain the systems of record. Credentials stay in customer-controlled vaults, raw content is processed only as required, and retention, logs, models, subprocessors and deployment location are documented and configurable.&rdquo;
           </p>
           <Link href="/security">
             Review the security model <span aria-hidden="true">→</span>
@@ -196,8 +195,8 @@ export default function Home() {
             <div className="console-foot">
               <i></i>
               <span>
-                Raw workplace data remains inside the authorised customer
-                environment.
+                Retention, logs, models, subprocessors and deployment location
+                are documented and configurable.
               </span>
             </div>
           </div>

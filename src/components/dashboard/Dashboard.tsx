@@ -27,6 +27,13 @@ import {
   startSlackAuth,
 } from "@/lib/dashboard/slack";
 import { initialPanel, type PanelState } from "@/lib/dashboard/types";
+import {
+  SAMPLE_EVENTS,
+  SAMPLE_FILES,
+  SAMPLE_MAIL,
+  SAMPLE_SLACK,
+  SAMPLE_STATS,
+} from "@/lib/dashboard/sample";
 import type {
   EventItem,
   FileItem,
@@ -97,20 +104,29 @@ export default function Dashboard() {
   const msToken = useRef<string | null>(null);
   const slackToken = useRef<string | null>(null);
 
-  const [mail, setMail] = useState<PanelState<MailItem>>(initialPanel);
-  const [gcal, setGcal] = useState<PanelState<EventItem>>(initialPanel);
-  const [drive, setDrive] = useState<PanelState<FileItem>>(initialPanel);
-  const [slack, setSlack] = useState<PanelState<SlackItem>>(initialPanel);
+  const sample = <T,>(items: T[], meta: string): PanelState<T> => ({
+    status: "ready",
+    meta,
+    items,
+  });
+
+  const [mail, setMail] = useState<PanelState<MailItem>>(() =>
+    sample(SAMPLE_MAIL, `${SAMPLE_MAIL.length} threads · sample`),
+  );
+  const [gcal, setGcal] = useState<PanelState<EventItem>>(() =>
+    sample(SAMPLE_EVENTS, `${SAMPLE_EVENTS.length} upcoming · sample`),
+  );
+  const [drive, setDrive] = useState<PanelState<FileItem>>(() =>
+    sample(SAMPLE_FILES, `${SAMPLE_FILES.length} files · sample`),
+  );
+  const [slack, setSlack] = useState<PanelState<SlackItem>>(() =>
+    sample(SAMPLE_SLACK, `${SAMPLE_SLACK.length} channels · sample`),
+  );
   const [outlook, setOutlook] = useState<PanelState<MailItem>>(initialPanel);
   const [mscal, setMscal] = useState<PanelState<EventItem>>(initialPanel);
   const [onedrive, setOnedrive] = useState<PanelState<FileItem>>(initialPanel);
 
-  const [stats, setStats] = useState({
-    unread: "–",
-    important: "–",
-    files: "–",
-    slack: "–",
-  });
+  const [stats, setStats] = useState(SAMPLE_STATS);
 
   // Slack's OAuth handler returns the token in the URL fragment. Read it once,
   // on the first render after hydration, then strip it from the address bar.
@@ -395,6 +411,9 @@ export default function Dashboard() {
   const slackConfigured = Boolean(SLACK_CLIENT_ID);
   const msConfigured = Boolean(MICROSOFT_CLIENT_ID);
 
+  const anyConnected =
+    googleConnected.size > 0 || msConnected.size > 0 || slackTeam !== null;
+
   const toggleProvider = (name: string) =>
     setOpenProvider((current) => (current === name ? null : name));
 
@@ -441,6 +460,14 @@ export default function Dashboard() {
       </div>
 
       <div className="wrap">
+        {!anyConnected && (
+          <p className="sample-banner" role="note">
+            <strong>Sample data.</strong> This is an illustrative brief so you
+            can see how Aide presents priorities. Connect a source below to
+            replace it with your own.
+          </p>
+        )}
+
         <div className="section-label">At a glance</div>
         <div className="stats">
           {[

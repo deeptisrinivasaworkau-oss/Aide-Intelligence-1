@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Aide Intelligence",
   },
   description:
-    "Aide Intelligence securely transforms workplace activity, operational signals and relevant external information into customer-controlled Power BI insights.",
+    "Aide Intelligence securely transforms workplace activity, operational signals and relevant external information into a customer-controlled executive brief.",
   manifest: "/site.webmanifest",
   icons: {
     icon: "/aide-mark.png",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "Aide Intelligence | Secure Executive and Workplace Intelligence",
     description:
-      "Aide Intelligence securely transforms workplace activity, operational signals and relevant external information into customer-controlled Power BI insights.",
+      "Aide Intelligence securely transforms workplace activity, operational signals and relevant external information into a customer-controlled executive brief.",
   },
 };
 

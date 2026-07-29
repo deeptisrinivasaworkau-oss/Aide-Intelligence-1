@@ -14,6 +14,7 @@ type Payload = {
   name?: string;
   email?: string;
   organisation?: string;
+  role?: string;
   message?: string;
   source?: string;
 };
@@ -22,6 +23,7 @@ const LIMITS: Record<keyof Payload, number> = {
   name: 200,
   email: 320,
   organisation: 200,
+  role: 120,
   message: 5000,
   source: 40,
 };
@@ -50,13 +52,14 @@ export async function POST(request: Request) {
     name: clean(body.name, LIMITS.name),
     email: clean(body.email, LIMITS.email),
     organisation: clean(body.organisation, LIMITS.organisation),
+    role: clean(body.role, LIMITS.role),
     message: clean(body.message, LIMITS.message),
     source: clean(body.source, LIMITS.source) || "unknown",
   };
 
   // No field is individually required, but a submission with nothing in it at
   // all is noise rather than a lead.
-  if (!row.name && !row.email && !row.organisation && !row.message) {
+  if (!row.name && !row.email && !row.organisation && !row.role && !row.message) {
     return NextResponse.json({ error: "empty" }, { status: 400 });
   }
 
@@ -70,13 +73,14 @@ export async function POST(request: Request) {
         name         text,
         email        text,
         organisation text,
+        role         text,
         message      text,
         source       text
       )
     `;
     await sql`
-      INSERT INTO requests (name, email, organisation, message, source)
-      VALUES (${row.name}, ${row.email}, ${row.organisation}, ${row.message}, ${row.source})
+      INSERT INTO requests (name, email, organisation, role, message, source)
+      VALUES (${row.name}, ${row.email}, ${row.organisation}, ${row.role}, ${row.message}, ${row.source})
     `;
     return NextResponse.json({ ok: true });
   } catch (error) {

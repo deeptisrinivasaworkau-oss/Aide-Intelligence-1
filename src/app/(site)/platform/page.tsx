@@ -91,7 +91,7 @@ export default function PlatformPage() {
             <span>04</span>
             <h3>Present</h3>
             <p>
-              Deliver customer-controlled Power BI dashboards and concise
+              Deliver customer-controlled the executive brief dashboards and concise
               decision-support summaries.
             </p>
           </article>

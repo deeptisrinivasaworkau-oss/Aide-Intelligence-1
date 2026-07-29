@@ -200,7 +200,7 @@ export default function ProductStage() {
         <span>
           <i></i> Illustrative interface
         </span>
-        <span>Power BI-compatible executive view</span>
+        <span>Source-linked executive view</span>
       </div>
     </div>
   );

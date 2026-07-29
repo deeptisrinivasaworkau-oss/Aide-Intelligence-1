@@ -20,6 +20,7 @@ export default function TryAideForm() {
           name: data.get("name"),
           email: data.get("email"),
           organisation: data.get("organisation"),
+          role: data.get("role"),
           message: data.get("message"),
           source: "try-aide",
         }),
@@ -60,10 +61,21 @@ export default function TryAideForm() {
         </label>
       </div>
 
-      <label className="try-field">
-        <span>Organisation</span>
-        <input name="organisation" type="text" autoComplete="organization" />
-      </label>
+      <div className="try-row">
+        <label className="try-field">
+          <span>Organisation</span>
+          <input name="organisation" type="text" autoComplete="organization" />
+        </label>
+        <label className="try-field">
+          <span>Role</span>
+          <input
+            name="role"
+            type="text"
+            autoComplete="organization-title"
+            placeholder="Owner, COO, Operations"
+          />
+        </label>
+      </div>
 
       <label className="try-field">
         <span>What would you like to know?</span>

@@ -45,7 +45,7 @@ const controls = [
   {
     number: "05",
     title: "Dashboard access",
-    detail: "The customer controls who can access resulting Power BI views.",
+    detail: "The customer controls who can access the resulting executive brief.",
     status: "Customer-controlled",
   },
 ];
@@ -84,8 +84,7 @@ export default function SecurityPage() {
         <div className="shell security-principle reveal">
           <span>Core principle</span>
           <p>
-            &ldquo;Aide Intelligence does not receive, inspect or store the
-            customer&rsquo;s raw workplace data.&rdquo;
+            &ldquo;Your systems remain the systems of record. Credentials stay in customer-controlled vaults, raw content is processed only as required, and retention, logs, models, subprocessors and deployment location are documented and configurable.&rdquo;
           </p>
         </div>
         <div className="shell control-matrix">
@@ -153,7 +152,7 @@ export default function SecurityPage() {
               <i></i>
               <i></i>
             </div>
-            <h3>Power BI</h3>
+            <h3>the executive brief</h3>
             <p>Customer-controlled dashboard access</p>
           </div>
         </div>

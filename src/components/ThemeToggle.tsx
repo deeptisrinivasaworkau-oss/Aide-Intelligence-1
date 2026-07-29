@@ -24,7 +24,7 @@ function currentTheme(): Theme {
     : "dark";
 }
 
-/** Subscribes to the attribute itself, so the button can't drift out of sync. */
+/** Subscribes to the attribute itself, so the switch can't drift out of sync. */
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, {
@@ -36,9 +36,10 @@ function subscribe(onChange: () => void) {
 
 export default function ThemeToggle() {
   const theme = useSyncExternalStore(subscribe, currentTheme, () => "dark" as Theme);
+  const isLight = theme === "light";
 
   const toggle = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
+    const next: Theme = isLight ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem(THEME_KEY, next);
@@ -49,22 +50,27 @@ export default function ThemeToggle() {
 
   return (
     <button
-      className="theme-toggle"
+      className="theme-switch"
       type="button"
+      role="switch"
+      aria-checked={isLight}
       onClick={toggle}
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-      title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
+      title={`Switch to ${isLight ? "dark" : "light"} mode`}
     >
-      {theme === "dark" ? (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="4.2" />
-          <path d="M12 2.6v2.6M12 18.8v2.6M4.4 12H1.8M22.2 12h-2.6M6.3 6.3 4.5 4.5M19.5 19.5l-1.8-1.8M17.7 6.3l1.8-1.8M4.5 19.5l1.8-1.8" />
+      {/* Both glyphs sit in the track; the knob slides to the active side. */}
+      <span className="theme-switch-glyph theme-switch-sun" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4.6" />
+          <path d="M12 1.4v3M12 19.6v3M1.4 12h3M19.6 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1" />
         </svg>
-      ) : (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
+      </span>
+      <span className="theme-switch-glyph theme-switch-moon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
           <path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7z" />
         </svg>
-      )}
+      </span>
+      <span className="theme-switch-knob" aria-hidden="true" />
     </button>
   );
 }

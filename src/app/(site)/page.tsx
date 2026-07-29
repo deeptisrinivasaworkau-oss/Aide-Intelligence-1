@@ -1,12 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import CinematicHero from "@/components/CinematicHero";
+import LogoMarquee from "@/components/LogoMarquee";
 import DashboardTabs from "@/components/DashboardTabs";
+
+import "@/styles/marquee.css";
 
 export default function Home() {
   return (
     <>
       <CinematicHero />
+
+      <div id="integrations" className="anchor-offset">
+        <LogoMarquee />
+      </div>
 
       <section className="trust-strip" aria-label="Aide Intelligence principles">
         <div className="shell trust-strip-inner">

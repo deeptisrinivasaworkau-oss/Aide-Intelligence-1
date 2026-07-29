@@ -34,14 +34,19 @@ export default function Header() {
       className={`site-header${scrolled || !overHero ? " scrolled" : ""}${overHero ? " over-hero" : ""}`}
     >
       <div className="shell header-inner">
+        {/* Icon + live text rather than the packaged wordmark: aide-logo.png
+            has the final "e" of "Intelligence" cropped inside the file itself,
+            and text stays crisp at every size. */}
         <Link className="brand" href="/" aria-label="Aide Intelligence home">
           <Image
-            src="/aide-logo.png"
-            alt="Aide Intelligence"
-            width={1300}
-            height={260}
+            className="brand-mark"
+            src="/aide-mark.png"
+            alt=""
+            width={240}
+            height={230}
             priority
           />
+          <span className="brand-word">Aide Intelligence</span>
         </Link>
         <button
           className="menu-toggle"

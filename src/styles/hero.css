@@ -1,5 +1,4 @@
-/* Cinematic homepage hero. Scoped to .cine-* so it stays clear of the
-   existing marketing styles in globals.css. */
+/* Cinematic homepage hero. Scoped to .cine-* to stay clear of globals.css. */
 
 .cine-hero {
   position: relative;
@@ -20,27 +19,29 @@
   z-index: -2;
 }
 
+/* The footage is near-black water carrying near-white sparkle, so contrast
+   under the copy swings hard frame to frame. A flat wash would either wash
+   out the water or fail to hold the type — this is weighted top and bottom
+   with a soft pool behind the text. */
 .cine-scrim {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    /* Soft pool behind the copy — keeps the headline legible once the ocean
-       brightens, without flattening the imagery at the edges. */
     radial-gradient(
-      62% 46% at 50% 48%,
-      rgba(4, 6, 11, 0.42) 0%,
-      rgba(4, 6, 11, 0.16) 60%,
+      58% 44% at 50% 46%,
+      rgba(3, 5, 10, 0.62) 0%,
+      rgba(3, 5, 10, 0.3) 58%,
       transparent 100%
     ),
     linear-gradient(
       to bottom,
-      rgba(4, 6, 11, 0.72) 0%,
-      rgba(4, 6, 11, 0.28) 22%,
-      rgba(4, 6, 11, 0.3) 52%,
-      rgba(4, 6, 11, 0.82) 100%
+      rgba(3, 5, 10, 0.66) 0%,
+      rgba(3, 5, 10, 0.24) 26%,
+      rgba(3, 5, 10, 0.3) 60%,
+      rgba(3, 5, 10, 0.78) 100%
     ),
-    rgba(4, 6, 11, 0.2);
+    rgba(3, 5, 10, 0.24);
 }
 
 .cine-content {
@@ -50,7 +51,7 @@
   align-items: center;
   text-align: center;
   padding: 0 24px;
-  max-width: 900px;
+  max-width: 940px;
 }
 
 /* --- Staged reveal ------------------------------------------------------ */
@@ -66,10 +67,10 @@
   }
 }
 
-@keyframes cineLogoIn {
+@keyframes cineMarkIn {
   from {
     opacity: 0;
-    transform: scale(0.965);
+    transform: scale(0.94);
   }
   to {
     opacity: 1;
@@ -77,42 +78,50 @@
   }
 }
 
-.cine-logo,
+.cine-mark,
 .cine-headline,
 .cine-cta,
-.cine-scroll-hint {
+.cine-scroll {
   opacity: 0;
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.cine-logo {
-  width: min(260px, 62vw);
+/* Mark only — the wordmark is carried by the headline and the header. */
+.cine-mark {
+  width: 62px;
   height: auto;
-  animation-name: cineLogoIn;
-  animation-duration: 1.5s;
-  animation-delay: 0.25s;
+  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.4));
+  animation-name: cineMarkIn;
+  animation-duration: 1.4s;
+  animation-delay: 0.2s;
 }
 
 .cine-headline {
-  margin: 34px 0 0;
-  font-size: clamp(40px, 6.4vw, 84px);
-  line-height: 1.02;
-  letter-spacing: -0.045em;
-  font-weight: 560;
+  margin: 30px 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(42px, 7vw, 92px);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
   color: #fff;
   text-wrap: balance;
-  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 44px rgba(0, 0, 0, 0.5);
   animation-name: cineRise;
   animation-duration: 1.1s;
-  animation-delay: 0.85s;
+  animation-delay: 0.75s;
+}
+.cine-headline em {
+  font-style: italic;
+  /* Warm highlight picked from the sunlight on the water. */
+  color: #f3e4c8;
 }
 
 .cine-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 42px;
+  margin-top: 40px;
   padding: 0 34px;
   min-height: 56px;
   border-radius: 999px;
@@ -120,60 +129,86 @@
   color: #07080b;
   font-size: 14.5px;
   font-weight: 650;
-  letter-spacing: 0.005em;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.4) inset,
-    0 10px 40px rgba(0, 0, 0, 0.35);
+    0 10px 40px rgba(0, 0, 0, 0.38);
   transition:
     transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
     box-shadow 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
   animation-name: cineRise;
   animation-duration: 1.1s;
-  animation-delay: 1.25s;
+  animation-delay: 1.15s;
 }
 .cine-cta:hover {
   transform: translateY(-2px);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    0 16px 50px rgba(120, 170, 255, 0.28);
+    0 16px 52px rgba(190, 215, 255, 0.3);
 }
 .cine-cta:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 4px;
 }
 
-/* --- Scroll hint -------------------------------------------------------- */
+/* --- Scroll cue --------------------------------------------------------- */
 
-.cine-scroll-hint {
+.cine-scroll {
   position: absolute;
-  bottom: 34px;
+  bottom: 36px;
   left: 50%;
   transform: translateX(-50%);
-  width: 1px;
-  height: 46px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.45));
-  overflow: hidden;
+  display: block;
   animation-name: cineRise;
   animation-duration: 1.2s;
-  animation-delay: 1.9s;
+  animation-delay: 1.7s;
 }
-.cine-scroll-hint span {
+.cine-scroll-mouse {
+  display: block;
+  width: 24px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+.cine-scroll:hover .cine-scroll-mouse {
+  border-color: rgba(255, 255, 255, 0.9);
+}
+.cine-scroll-wheel {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent, #fff);
-  animation: cineTrail 2.8s ease-in-out infinite;
+  top: 7px;
+  left: 50%;
+  width: 3px;
+  height: 7px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: #fff;
+  animation: cineWheel 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
-@keyframes cineTrail {
+@keyframes cineWheel {
   0% {
-    transform: translateY(-100%);
+    opacity: 0;
+    transform: translateY(0);
   }
-  60%,
+  25% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+    transform: translateY(13px);
+  }
   100% {
-    transform: translateY(100%);
+    opacity: 0;
+    transform: translateY(13px);
   }
+}
+.cine-scroll:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 6px;
+  border-radius: 16px;
 }
 
-/* --- Motion and data preferences ---------------------------------------- */
+/* --- Motion preference -------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   .cine-video {
@@ -181,28 +216,35 @@
   }
   .cine-hero {
     background:
-      radial-gradient(1200px 700px at 50% 120%, rgba(60, 110, 190, 0.28), transparent 70%),
-      linear-gradient(180deg, #070a12, #0b1220);
+      radial-gradient(1200px 700px at 50% 118%, rgba(70, 115, 190, 0.3), transparent 70%),
+      linear-gradient(180deg, #060911, #0a1120);
   }
-  .cine-logo,
+  .cine-mark,
   .cine-headline,
   .cine-cta,
-  .cine-scroll-hint {
+  .cine-scroll {
     opacity: 1;
     animation: none;
   }
-  .cine-scroll-hint span {
+  .cine-scroll-wheel {
     animation: none;
+    opacity: 1;
   }
 }
 
 @media (max-width: 620px) {
+  .cine-mark {
+    width: 52px;
+  }
   .cine-headline {
-    margin-top: 26px;
+    margin-top: 24px;
   }
   .cine-cta {
     margin-top: 32px;
     width: 100%;
     max-width: 320px;
+  }
+  .cine-scroll {
+    bottom: 24px;
   }
 }

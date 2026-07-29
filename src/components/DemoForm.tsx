@@ -15,18 +15,32 @@ export default function DemoForm() {
 
     const formData = new FormData(event.currentTarget);
 
+    // Was posting to /__forms.html for Netlify Forms, which returns 405 on
+    // Vercel — every submission was being lost. Now goes to the same store as
+    // the Try Aide page.
     try {
-      const response = await fetch("/__forms.html", {
+      const response = await fetch("/api/requests", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as unknown as string[][]).toString(),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          organisation: formData.get("organisation"),
+          message: formData.get("message"),
+          source: "demonstration-request",
+        }),
       });
 
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.error ?? `Request failed: ${response.status}`);
+      }
       router.push("/thank-you");
-    } catch {
+    } catch (err) {
       setError(
-        "The request could not be submitted. Please try again, or contact us directly.",
+        (err as Error).message === "not_configured"
+          ? "This form isn't connected to a database yet, so your request was not saved."
+          : "The request could not be submitted. Please try again, or contact us directly.",
       );
       setSubmitting(false);
     }

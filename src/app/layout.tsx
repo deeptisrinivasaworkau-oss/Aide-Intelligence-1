@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
+import { NO_FLASH_SCRIPT } from "@/components/ThemeToggle";
 import "./globals.css";
 
 // Display face. Nearly every AI product ships Inter everywhere; an editorial
@@ -56,7 +57,13 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       className={`${display.variable} ${ui.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Sets data-theme before first paint so the page never flashes the
+            wrong theme. Must run ahead of React, hence the inline script. */}
+        <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
+      </head>
       <body>{children}</body>
     </html>
   );

@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
 
-// Platform, Security, Integrations and Use Cases still exist and are still
-// linked from the footer — they're out of the top nav to keep it minimal.
+// Security, Integrations, Use Cases and About stay live and stay in the
+// footer — the top nav is deliberately down to two destinations.
 const navLinks = [
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Demonstration" },
-  { href: "/login", label: "Sign In" },
+  { href: "/platform", label: "Features" },
+  { href: "/pricing", label: "Pricing" },
 ];
 
 export default function Header() {
@@ -19,7 +19,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   // The homepage hero sits behind the header, so it starts transparent there
-  // and only frosts once you scroll past it. Every other page frosts at once.
+  // and frosts once scrolled. Every other page frosts immediately.
   const overHero = pathname === "/";
 
   useEffect(() => {
@@ -34,9 +34,6 @@ export default function Header() {
       className={`site-header${scrolled || !overHero ? " scrolled" : ""}${overHero ? " over-hero" : ""}`}
     >
       <div className="shell header-inner">
-        {/* Icon + live text rather than the packaged wordmark: aide-logo.png
-            has the final "e" of "Intelligence" cropped inside the file itself,
-            and text stays crisp at every size. */}
         <Link className="brand" href="/" aria-label="Aide Intelligence home">
           <Image
             className="brand-mark"
@@ -48,6 +45,7 @@ export default function Header() {
           />
           <span className="brand-word">Aide Intelligence</span>
         </Link>
+
         <button
           className="menu-toggle"
           type="button"
@@ -59,6 +57,7 @@ export default function Header() {
           <span></span>
           <span></span>
         </button>
+
         <nav
           id="primary-nav"
           className={`nav${open ? " open" : ""}`}
@@ -74,6 +73,24 @@ export default function Header() {
               {label}
             </Link>
           ))}
+
+          <span className="nav-actions">
+            <ThemeToggle />
+            <Link
+              className="nav-btn nav-btn-quiet"
+              href="/login"
+              onClick={() => setOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              className="nav-btn nav-btn-solid"
+              href="/try-aide"
+              onClick={() => setOpen(false)}
+            >
+              Try Aide
+            </Link>
+          </span>
         </nav>
       </div>
     </header>

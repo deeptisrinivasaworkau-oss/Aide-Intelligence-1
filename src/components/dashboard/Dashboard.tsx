@@ -89,6 +89,7 @@ export default function Dashboard() {
   const mounted = useMounted();
 
   const [view, setView] = useState<View>("summary");
+  const [query, setQuery] = useState("");
   const [googleReady, setGoogleReady] = useState(false);
   const [msalReady, setMsalReady] = useState(false);
 
@@ -443,6 +444,30 @@ export default function Dashboard() {
     { label: "Important / flagged", value: stats.important },
   ];
 
+  // One search box, shared across every view, filters whatever's on screen
+  // rather than opening a separate results page.
+  const q = query.trim().toLowerCase();
+  const searchable = (parts: (string | null | undefined)[]) =>
+    parts.filter(Boolean).join(" ").toLowerCase();
+  const filterItems = <T,>(items: T[], text: (item: T) => string): T[] =>
+    q ? items.filter((item) => text(item).includes(q)) : items;
+  const noMatchLabel = "No matches for your search.";
+
+  const filteredBrief = filterItems(brief, (i) =>
+    searchable([i.headline, i.detail, i.recommendation, i.source]),
+  );
+  const filteredMail = filterItems(mail.items, (m) =>
+    searchable([m.sender, m.subject, m.snippet, m.summaryLine]),
+  );
+  const filteredGcal = filterItems(gcal.items, (e) => searchable([e.title, e.location]));
+  const filteredDrive = filterItems(drive.items, (f) => searchable([f.name, f.owner]));
+  const filteredOutlook = filterItems(outlook.items, (m) =>
+    searchable([m.sender, m.subject, m.snippet, m.summaryLine]),
+  );
+  const filteredMscal = filterItems(mscal.items, (e) => searchable([e.title, e.location]));
+  const filteredOnedrive = filterItems(onedrive.items, (f) => searchable([f.name, f.owner]));
+  const filteredSlack = filterItems(slack.items, (s) => searchable([s.channelName, s.text]));
+
   return (
     <div className="aide-dashboard">
       <Script
@@ -494,7 +519,32 @@ export default function Dashboard() {
           </p>
         )}
 
-        <div className="section-label">At a glance</div>
+        <div className="section-label-row">
+          <div className="section-label">At a glance</div>
+          <label className="search-box">
+            <svg aria-hidden="true" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+              <line x1="14" y1="14" x2="18.5" y2="18.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search mail, files, channels…"
+              aria-label="Search dashboard"
+            />
+            {query && (
+              <button
+                type="button"
+                className="search-clear"
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+          </label>
+        </div>
         <div className="stats">
           {STAT_CARDS.map((stat) => (
             <div className="stat" key={stat.label}>
@@ -515,11 +565,15 @@ export default function Dashboard() {
             <div className="brief-head">
               <div className="section-label">Your briefing</div>
               <p className="brief-sub">
-                {brief.length} item{brief.length === 1 ? "" : "s"} across your
-                connected systems, ranked by what needs deciding.
+                {q
+                  ? `${filteredBrief.length} match${filteredBrief.length === 1 ? "" : "es"} for "${query.trim()}".`
+                  : `${brief.length} item${brief.length === 1 ? "" : "s"} across your connected systems, ranked by what needs deciding.`}
               </p>
             </div>
-            <Brief items={brief} />
+            <Brief
+              items={filteredBrief}
+              emptyMessage={q ? noMatchLabel : undefined}
+            />
 
           </div>
         )}
@@ -565,28 +619,28 @@ export default function Dashboard() {
 
             <Panel
               title="Recent inbox activity"
-              state={mail}
+              state={{ ...mail, items: filteredMail }}
               lockedHint="Connect Gmail above to see inbox activity."
               loadingLabel="Gmail"
-              emptyLabel="No inbox threads found."
+              emptyLabel={q ? noMatchLabel : "No inbox threads found."}
             >
               {(items) => <MailRows items={items} />}
             </Panel>
             <Panel
               title="Upcoming calendar"
-              state={gcal}
+              state={{ ...gcal, items: filteredGcal }}
               lockedHint="Connect Calendar above to see events."
               loadingLabel="Calendar"
-              emptyLabel="No upcoming events found."
+              emptyLabel={q ? noMatchLabel : "No upcoming events found."}
             >
               {(items) => <EventRows items={items} />}
             </Panel>
             <Panel
               title="Recent Drive activity"
-              state={drive}
+              state={{ ...drive, items: filteredDrive }}
               lockedHint="Connect Drive above to see document activity."
               loadingLabel="Drive"
-              emptyLabel="No recent Drive files found."
+              emptyLabel={q ? noMatchLabel : "No recent Drive files found."}
             >
               {(items) => <FileRows items={items} />}
             </Panel>
@@ -639,28 +693,28 @@ export default function Dashboard() {
 
             <Panel
               title="Recent Outlook mail"
-              state={outlook}
+              state={{ ...outlook, items: filteredOutlook }}
               lockedHint="Connect Outlook above to see mail."
               loadingLabel="Outlook"
-              emptyLabel="No Outlook messages found."
+              emptyLabel={q ? noMatchLabel : "No Outlook messages found."}
             >
               {(items) => <MailRows items={items} />}
             </Panel>
             <Panel
               title="Upcoming Outlook calendar"
-              state={mscal}
+              state={{ ...mscal, items: filteredMscal }}
               lockedHint="Connect Outlook calendar above to see events."
               loadingLabel="calendar"
-              emptyLabel="No upcoming events found."
+              emptyLabel={q ? noMatchLabel : "No upcoming events found."}
             >
               {(items) => <EventRows items={items} />}
             </Panel>
             <Panel
               title="Recent OneDrive activity"
-              state={onedrive}
+              state={{ ...onedrive, items: filteredOnedrive }}
               lockedHint="Connect OneDrive above to see document activity."
               loadingLabel="OneDrive"
-              emptyLabel="No recent OneDrive files found."
+              emptyLabel={q ? noMatchLabel : "No recent OneDrive files found."}
             >
               {(items) => <FileRows items={items} />}
             </Panel>
@@ -694,10 +748,10 @@ export default function Dashboard() {
 
             <Panel
               title="Recent channel activity"
-              state={slack}
+              state={{ ...slack, items: filteredSlack }}
               lockedHint="Connect Slack above to see channel activity."
               loadingLabel="Slack"
-              emptyLabel="No recent channel activity found."
+              emptyLabel={q ? noMatchLabel : "No recent channel activity found."}
             >
               {(items) => <SlackRows items={items} teamId={slackTeam?.id ?? ""} />}
             </Panel>

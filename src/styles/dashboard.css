@@ -117,6 +117,67 @@
   margin: 20px 4px 10px;
   font-weight: 600;
 }
+.aide-dashboard .section-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 20px 4px 10px;
+}
+.aide-dashboard .section-label-row .section-label {
+  margin: 0;
+}
+
+/* ---- Search ---- */
+.aide-dashboard .search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 240px;
+  max-width: 100%;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  color: var(--muted);
+  transition: border-color 0.2s ease;
+}
+.aide-dashboard .search-box:focus-within {
+  border-color: var(--border-strong);
+}
+.aide-dashboard .search-box svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+.aide-dashboard .search-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12.5px;
+}
+.aide-dashboard .search-box input::placeholder {
+  color: var(--faint);
+}
+.aide-dashboard .search-clear {
+  flex: none;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--faint);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.aide-dashboard .search-clear:hover {
+  color: var(--ink);
+}
 
 /* ---- KPI stat cards ---- */
 .aide-dashboard .stats {
@@ -340,6 +401,9 @@
   }
   .aide-dashboard .hero {
     padding: 24px 16px 6px;
+  }
+  .aide-dashboard .search-box {
+    width: 100%;
   }
 }
 

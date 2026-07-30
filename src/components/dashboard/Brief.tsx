@@ -22,7 +22,13 @@ function whenLabel(when: string | null) {
  * whole summary fits a single screen. Each box shows its most severe items and
  * opens in place rather than pushing the page taller.
  */
-export default function Brief({ items }: { items: BriefItem[] }) {
+export default function Brief({
+  items,
+  emptyMessage = "Nothing needs your attention right now.",
+}: {
+  items: BriefItem[];
+  emptyMessage?: string;
+}) {
   const [open, setOpen] = useState<BriefCategory[]>([]);
   const groups = groupBrief(items);
 
@@ -34,7 +40,7 @@ export default function Brief({ items }: { items: BriefItem[] }) {
     );
 
   if (groups.length === 0) {
-    return <div className="brief-empty">Nothing needs your attention right now.</div>;
+    return <div className="brief-empty">{emptyMessage}</div>;
   }
 
   return (

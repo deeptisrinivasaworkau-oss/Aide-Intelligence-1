@@ -154,3 +154,26 @@
 
 .site-header.over-hero:not(.scrolled) .theme-switch{border-color:rgba(255,255,255,.26);
   background:rgba(255,255,255,.12)}
+
+/* --- Cost-of-missed-signals (pricing) ----------------------------------- */
+.cost-section{background:var(--surface-1)}
+.cost-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.cost-card{padding:28px 26px 30px;border:1px solid var(--line);border-radius:16px;
+  background:rgba(var(--fg-rgb),.02);transition:border-color .3s var(--ease),transform .3s var(--ease)}
+.cost-card:hover{transform:translateY(-2px)}
+.cost-violet{border-color:rgba(124,108,255,.35)}
+.cost-amber{border-color:rgba(240,189,107,.38)}
+.cost-cyan{border-color:rgba(95,210,255,.35)}
+.cost-figure{margin:0 0 14px;font-size:clamp(28px,3vw,38px);font-weight:660;
+  letter-spacing:-.03em;color:var(--text-1);font-variant-numeric:tabular-nums}
+.cost-body{margin:0;color:var(--text-2);font-size:13.5px;line-height:1.6}
+.cost-source{margin:12px 0 0;color:var(--text-4);font-size:11px;line-height:1.5}
+.cost-implication{display:flex;flex-direction:column;gap:9px;margin-top:26px;
+  padding:22px 26px;border:1px solid rgba(95,210,255,.35);border-radius:14px;
+  background:linear-gradient(120deg,rgba(95,210,255,.05),rgba(124,108,255,.03))}
+.cost-implication>span{color:var(--cyan);font:700 10px/1.2 ui-monospace,monospace;
+  text-transform:uppercase;letter-spacing:.14em}
+.cost-implication p{margin:0;font-size:clamp(17px,2vw,22px);letter-spacing:-.02em;color:var(--text-1)}
+.cost-todo{margin:16px 0 0;padding:10px 14px;border:1px dashed rgba(240,189,107,.4);
+  border-radius:10px;color:var(--amber);font-size:12px}
+@media(max-width:900px){.cost-grid{grid-template-columns:1fr}}

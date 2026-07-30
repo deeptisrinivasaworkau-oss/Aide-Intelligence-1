@@ -49,6 +49,8 @@ import {
   Panel,
   SlackRows,
 } from "./panels";
+import ViewTabs, { type View } from "./DashboardTabs";
+import SourceRow from "./SourceRow";
 import * as Icon from "./icons";
 
 import "@/styles/dashboard.css";
@@ -84,7 +86,7 @@ function greetingFor(name: string) {
 export default function Dashboard() {
   const mounted = useMounted();
 
-  const [openProvider, setOpenProvider] = useState<string | null>("google");
+  const [view, setView] = useState<View>("summary");
   const [googleReady, setGoogleReady] = useState(false);
   const [msalReady, setMsalReady] = useState(false);
 
@@ -414,8 +416,25 @@ export default function Dashboard() {
   const anyConnected =
     googleConnected.size > 0 || msConnected.size > 0 || slackTeam !== null;
 
-  const toggleProvider = (name: string) =>
-    setOpenProvider((current) => (current === name ? null : name));
+  const connected = {
+    google: googleConnected.size > 0,
+    microsoft: msConnected.size > 0,
+    slack: slackTeam !== null,
+  };
+
+  // Merged cross-source view for the Summary tab: the whole point of the brief
+  // is one queue, so priorities are ranked across providers rather than per app.
+  const attention = [...mail.items, ...outlook.items]
+    .filter((m) => m.unread || m.important)
+    .sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime())
+    .slice(0, 5);
+
+  const STAT_CARDS = [
+    { label: "Unread emails", value: stats.unread },
+    { label: "Important / flagged", value: stats.important },
+    { label: "Drive files (7d)", value: stats.files },
+    { label: "Slack channels active", value: stats.slack },
+  ];
 
   return (
     <div className="aide-dashboard">
@@ -462,20 +481,15 @@ export default function Dashboard() {
       <div className="wrap">
         {!anyConnected && (
           <p className="sample-banner" role="note">
-            <strong>Sample data.</strong> This is an illustrative brief so you
-            can see how Aide presents priorities. Connect a source below to
-            replace it with your own.
+            <strong>Sample data.</strong> This is an illustrative brief so you can
+            see how Aide presents priorities. Connect a source to replace it with
+            your own.
           </p>
         )}
 
         <div className="section-label">At a glance</div>
         <div className="stats">
-          {[
-            { label: "Unread emails", value: stats.unread },
-            { label: "Important / flagged", value: stats.important },
-            { label: "Drive files (7d)", value: stats.files },
-            { label: "Slack channels active", value: stats.slack },
-          ].map((stat) => (
+          {STAT_CARDS.map((stat) => (
             <div className="stat" key={stat.label}>
               <div className="label">{stat.label}</div>
               <div className="num">{stat.value}</div>
@@ -486,290 +500,238 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="section-label">Connections</div>
-        <div className="connections">
-          {/* GOOGLE */}
-          <div className={`provider${openProvider === "google" ? " open" : ""}`}>
-            <button
-              className="provider-head"
-              type="button"
-              aria-expanded={openProvider === "google"}
-              onClick={() => toggleProvider("google")}
-            >
-              <span className="provider-logo">
-                <Icon.GoogleIcon />
-              </span>
-              <span className="provider-title">
-                <span className="p-name">Google</span>
-                <span
-                  className={`p-sub${googleConnected.size > 0 ? " on" : ""}`}
-                >
-                  {googleConnected.size > 0 ? "Connected" : "Not connected"}
-                </span>
-              </span>
-              <span className="provider-chevron">▾</span>
-            </button>
-            {openProvider === "google" && (
-              <div className="provider-body">
-                {(
-                  [
-                    { key: "gmail", label: "Gmail", icon: <Icon.GmailIcon /> },
-                    {
-                      key: "calendar",
-                      label: "Calendar",
-                      icon: <Icon.GoogleCalendarIcon />,
-                    },
-                    { key: "drive", label: "Google Drive", icon: <Icon.DriveIcon /> },
-                  ] as const
-                ).map((service) => (
-                  <div className="service-row" key={service.key}>
-                    <span className="svc-logo">{service.icon}</span>
-                    <div className="svc-name">{service.label}</div>
-                    <button
-                      className={`conn-btn${googleConnected.has(service.key) ? " connected" : ""}`}
-                      type="button"
-                      disabled={!googleConfigured || !googleReady}
-                      onClick={() => connectGoogle(service.key)}
-                    >
-                      {googleConnected.has(service.key) ? "Connected" : "Connect"}
-                    </button>
-                  </div>
-                ))}
-                <div className="service-row soon">
-                  <span className="svc-logo">
-                    <Icon.MeetIcon />
-                  </span>
-                  <div className="svc-name">Google Meet</div>
-                  <span className="soon-tag">Coming soon</span>
-                </div>
-                <div className="service-row soon">
-                  <span className="svc-logo">
-                    <Icon.YouTubeIcon />
-                  </span>
-                  <div className="svc-name">YouTube statistics</div>
-                  <span className="soon-tag">Coming soon</span>
-                </div>
-                <div className="service-row soon">
-                  <span className="svc-logo">
-                    <Icon.HomeIcon />
-                  </span>
-                  <div className="svc-name">Google Home</div>
-                  <span className="soon-tag">Coming soon</span>
-                </div>
-                {!googleConfigured && (
-                  <div className="config-warning">
-                    Google isn&rsquo;t configured — set
-                    NEXT_PUBLIC_GOOGLE_CLIENT_ID.
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+        <ViewTabs view={view} onChange={setView} connected={connected} />
 
-          {/* SLACK */}
-          <div className={`provider${openProvider === "slack" ? " open" : ""}`}>
-            <button
-              className="provider-head"
-              type="button"
-              aria-expanded={openProvider === "slack"}
-              onClick={() => toggleProvider("slack")}
+        {/* ---------------- Summary ---------------- */}
+        {view === "summary" && (
+          <div className="view-body">
+            <Panel
+              title="Needs your attention"
+              state={{
+                status: "ready",
+                meta: `${attention.length} across all sources`,
+                items: attention,
+              }}
+              lockedHint=""
+              loadingLabel=""
+              emptyLabel="Nothing flagged right now."
             >
-              <span className="provider-logo">
-                <Icon.SlackIcon />
-              </span>
-              <span className="provider-title">
-                <span className="p-name">Slack</span>
-                <span className={`p-sub${slackTeam ? " on" : ""}`}>
-                  {slackTeam
-                    ? `Connected${slackTeam.name ? ` · ${slackTeam.name}` : ""}`
-                    : "Not connected"}
-                </span>
-              </span>
-              <span className="provider-chevron">▾</span>
-            </button>
-            {openProvider === "slack" && (
-              <div className="provider-body">
-                <div className="service-row">
-                  <span className="svc-logo">
-                    <Icon.SlackHashIcon />
-                  </span>
-                  <div className="svc-name">Channels &amp; messages</div>
+              {(items) => <MailRows items={items} />}
+            </Panel>
+
+            <div className="summary-grid">
+              {(
+                [
+                  { id: "google", label: "Google", icon: <Icon.GoogleIcon />, panels: [mail, gcal, drive] },
+                  { id: "microsoft", label: "Microsoft", icon: <Icon.MicrosoftIcon />, panels: [outlook, mscal, onedrive] },
+                  { id: "slack", label: "Slack", icon: <Icon.SlackIcon />, panels: [slack] },
+                ] as const
+              ).map((group) => {
+                const live = group.panels.filter((p) => p.status === "ready");
+                const count = live.reduce((n, p) => n + p.items.length, 0);
+                return (
                   <button
-                    className={`conn-btn${slackTeam ? " connected" : ""}`}
+                    className="summary-card"
+                    key={group.id}
                     type="button"
-                    disabled={!slackConfigured}
-                    onClick={() => startSlackAuth(SLACK_CLIENT_ID)}
+                    onClick={() => setView(group.id)}
                   >
-                    {slackTeam ? "Connected" : "Connect"}
+                    <span className="summary-mark">{group.icon}</span>
+                    <span className="summary-name">{group.label}</span>
+                    <span className="summary-count">{count}</span>
+                    <span className="summary-state">
+                      {connected[group.id] ? "Connected" : "Not connected"}
+                    </span>
                   </button>
-                </div>
-                {slackError && (
-                  <div className="config-warning">
-                    Slack connection failed: {slackError}
-                  </div>
-                )}
-                {!slackConfigured && (
-                  <div className="config-warning">
-                    Slack isn&rsquo;t configured — set NEXT_PUBLIC_SLACK_CLIENT_ID
-                    in the browser build, and SLACK_CLIENT_ID / SLACK_CLIENT_SECRET
-                    as server environment variables.
-                  </div>
-                )}
-              </div>
-            )}
+                );
+              })}
+            </div>
           </div>
+        )}
 
-          {/* MICROSOFT */}
-          <div className={`provider${openProvider === "microsoft" ? " open" : ""}`}>
-            <button
-              className="provider-head"
-              type="button"
-              aria-expanded={openProvider === "microsoft"}
-              onClick={() => toggleProvider("microsoft")}
+        {/* ---------------- Google ---------------- */}
+        {view === "google" && (
+          <div className="view-body">
+            <div className="source-list">
+              <SourceRow
+                icon={<Icon.GmailIcon />}
+                name="Gmail"
+                note="Inbox threads and triage"
+                connected={googleConnected.has("gmail")}
+                disabled={!googleConfigured || !googleReady}
+                onConnect={() => connectGoogle("gmail")}
+              />
+              <SourceRow
+                icon={<Icon.GoogleCalendarIcon />}
+                name="Calendar"
+                note="Upcoming commitments"
+                connected={googleConnected.has("calendar")}
+                disabled={!googleConfigured || !googleReady}
+                onConnect={() => connectGoogle("calendar")}
+              />
+              <SourceRow
+                icon={<Icon.DriveIcon />}
+                name="Drive"
+                note="Recently changed documents"
+                connected={googleConnected.has("drive")}
+                disabled={!googleConfigured || !googleReady}
+                onConnect={() => connectGoogle("drive")}
+              />
+              <SourceRow icon={<Icon.MeetIcon />} name="Meet" soon />
+              <SourceRow icon={<Icon.YouTubeIcon />} name="YouTube statistics" soon />
+              <SourceRow icon={<Icon.HomeIcon />} name="Google Home" soon />
+            </div>
+
+            {!googleConfigured && (
+              <p className="source-warning">
+                Google isn&rsquo;t configured — set NEXT_PUBLIC_GOOGLE_CLIENT_ID.
+              </p>
+            )}
+
+            <Panel
+              title="Recent inbox activity"
+              state={mail}
+              lockedHint="Connect Gmail above to see inbox activity."
+              loadingLabel="Gmail"
+              emptyLabel="No inbox threads found."
             >
-              <span className="provider-logo">
-                <Icon.MicrosoftIcon />
-              </span>
-              <span className="provider-title">
-                <span className="p-name">Microsoft</span>
-                <span className={`p-sub${msConnected.size > 0 ? " on" : ""}`}>
-                  {msConnected.size > 0
-                    ? `Connected${msAccountLabel ? ` · ${msAccountLabel}` : ""}`
-                    : "Not connected"}
-                </span>
-              </span>
-              <span className="provider-chevron">▾</span>
-            </button>
-            {openProvider === "microsoft" && (
-              <div className="provider-body">
-                {(
-                  [
-                    {
-                      key: "outlook",
-                      label: "Outlook mail",
-                      icon: <Icon.OutlookIcon />,
-                    },
-                    {
-                      key: "calendar",
-                      label: "Outlook calendar",
-                      icon: <Icon.OutlookCalendarIcon />,
-                    },
-                    {
-                      key: "onedrive",
-                      label: "OneDrive",
-                      icon: <Icon.OneDriveIcon />,
-                    },
-                  ] as const
-                ).map((service) => (
-                  <div className="service-row" key={service.key}>
-                    <span className="svc-logo">{service.icon}</span>
-                    <div className="svc-name">{service.label}</div>
-                    <button
-                      className={`conn-btn${msConnected.has(service.key) ? " connected" : ""}`}
-                      type="button"
-                      disabled={!msConfigured || !msalReady}
-                      onClick={() => void connectMicrosoft(service.key)}
-                    >
-                      {msConnected.has(service.key) ? "Connected" : "Connect"}
-                    </button>
-                  </div>
-                ))}
-                <div className="service-row soon">
-                  <span className="svc-logo">
-                    <Icon.TeamsIcon />
-                  </span>
-                  <div className="svc-name">Teams</div>
-                  <span className="soon-tag">Coming soon</span>
-                </div>
-                {!msConfigured && (
-                  <div className="config-warning">
-                    Microsoft isn&rsquo;t configured — register a
-                    single-page application in Azure (Entra ID &gt; App
-                    registrations), add this site&rsquo;s URL as a redirect URI,
-                    then set NEXT_PUBLIC_MICROSOFT_CLIENT_ID. Work and university
-                    accounts may need IT admin consent.
-                  </div>
-                )}
-              </div>
-            )}
+              {(items) => <MailRows items={items} />}
+            </Panel>
+            <Panel
+              title="Upcoming calendar"
+              state={gcal}
+              lockedHint="Connect Calendar above to see events."
+              loadingLabel="Calendar"
+              emptyLabel="No upcoming events found."
+            >
+              {(items) => <EventRows items={items} />}
+            </Panel>
+            <Panel
+              title="Recent Drive activity"
+              state={drive}
+              lockedHint="Connect Drive above to see document activity."
+              loadingLabel="Drive"
+              emptyLabel="No recent Drive files found."
+            >
+              {(items) => <FileRows items={items} />}
+            </Panel>
           </div>
-        </div>
+        )}
 
-        <div className="section-label">Activity</div>
+        {/* ---------------- Microsoft ---------------- */}
+        {view === "microsoft" && (
+          <div className="view-body">
+            <div className="source-list">
+              <SourceRow
+                icon={<Icon.OutlookIcon />}
+                name="Outlook mail"
+                note="Inbox threads and triage"
+                connected={msConnected.has("outlook")}
+                disabled={!msConfigured || !msalReady}
+                onConnect={() => void connectMicrosoft("outlook")}
+              />
+              <SourceRow
+                icon={<Icon.OutlookCalendarIcon />}
+                name="Outlook calendar"
+                note="Upcoming commitments"
+                connected={msConnected.has("calendar")}
+                disabled={!msConfigured || !msalReady}
+                onConnect={() => void connectMicrosoft("calendar")}
+              />
+              <SourceRow
+                icon={<Icon.OneDriveIcon />}
+                name="OneDrive"
+                note="Recently changed documents"
+                connected={msConnected.has("onedrive")}
+                disabled={!msConfigured || !msalReady}
+                onConnect={() => void connectMicrosoft("onedrive")}
+              />
+              <SourceRow icon={<Icon.TeamsIcon />} name="Teams" soon />
+            </div>
 
-        <Panel
-          title="Recent inbox activity"
-          state={mail}
-          lockedHint="Connect Google above to see Gmail activity."
-          loadingLabel="Gmail"
-          emptyLabel="No inbox threads found."
-        >
-          {(items) => <MailRows items={items} />}
-        </Panel>
+            {!msConfigured && (
+              <p className="source-warning">
+                Microsoft isn&rsquo;t configured — register a single-page
+                application in Azure (Entra ID &gt; App registrations), add this
+                site&rsquo;s URL as a redirect URI, then set
+                NEXT_PUBLIC_MICROSOFT_CLIENT_ID. Work and university accounts may
+                need IT admin consent.
+              </p>
+            )}
+            {msAccountLabel && (
+              <p className="source-note-line">Signed in as {msAccountLabel}</p>
+            )}
 
-        <Panel
-          title="Upcoming Google calendar"
-          state={gcal}
-          lockedHint="Connect Google Calendar above to see events."
-          loadingLabel="Calendar"
-          emptyLabel="No upcoming events found."
-        >
-          {(items) => <EventRows items={items} />}
-        </Panel>
+            <Panel
+              title="Recent Outlook mail"
+              state={outlook}
+              lockedHint="Connect Outlook above to see mail."
+              loadingLabel="Outlook"
+              emptyLabel="No Outlook messages found."
+            >
+              {(items) => <MailRows items={items} />}
+            </Panel>
+            <Panel
+              title="Upcoming Outlook calendar"
+              state={mscal}
+              lockedHint="Connect Outlook calendar above to see events."
+              loadingLabel="calendar"
+              emptyLabel="No upcoming events found."
+            >
+              {(items) => <EventRows items={items} />}
+            </Panel>
+            <Panel
+              title="Recent OneDrive activity"
+              state={onedrive}
+              lockedHint="Connect OneDrive above to see document activity."
+              loadingLabel="OneDrive"
+              emptyLabel="No recent OneDrive files found."
+            >
+              {(items) => <FileRows items={items} />}
+            </Panel>
+          </div>
+        )}
 
-        <Panel
-          title="Recent Drive activity"
-          state={drive}
-          lockedHint="Connect Google above to see Drive activity."
-          loadingLabel="Drive"
-          emptyLabel="No recent Drive files found."
-        >
-          {(items) => <FileRows items={items} />}
-        </Panel>
+        {/* ---------------- Slack ---------------- */}
+        {view === "slack" && (
+          <div className="view-body">
+            <div className="source-list">
+              <SourceRow
+                icon={<Icon.SlackHashIcon />}
+                name="Channels & messages"
+                note={slackTeam?.name ? `Workspace: ${slackTeam.name}` : "Public and private channels"}
+                connected={slackTeam !== null}
+                disabled={!slackConfigured}
+                onConnect={() => startSlackAuth(SLACK_CLIENT_ID)}
+              />
+            </div>
 
-        <Panel
-          title="Recent Slack activity"
-          state={slack}
-          lockedHint="Connect Slack above to see channel activity."
-          loadingLabel="Slack"
-          emptyLabel="No recent channel activity found."
-        >
-          {(items) => <SlackRows items={items} teamId={slackTeam?.id ?? ""} />}
-        </Panel>
+            {slackError && (
+              <p className="source-warning">Slack connection failed: {slackError}</p>
+            )}
+            {!slackConfigured && (
+              <p className="source-warning">
+                Slack isn&rsquo;t configured — set NEXT_PUBLIC_SLACK_CLIENT_ID in
+                the browser build, and SLACK_CLIENT_ID / SLACK_CLIENT_SECRET as
+                server environment variables.
+              </p>
+            )}
 
-        <Panel
-          title="Recent Outlook mail"
-          state={outlook}
-          lockedHint="Connect Microsoft above to see Outlook mail."
-          loadingLabel="Outlook"
-          emptyLabel="No Outlook messages found."
-        >
-          {(items) => <MailRows items={items} />}
-        </Panel>
-
-        <Panel
-          title="Upcoming Outlook calendar"
-          state={mscal}
-          lockedHint="Connect Microsoft above to see calendar events."
-          loadingLabel="calendar"
-          emptyLabel="No upcoming events found."
-        >
-          {(items) => <EventRows items={items} />}
-        </Panel>
-
-        <Panel
-          title="Recent OneDrive activity"
-          state={onedrive}
-          lockedHint="Connect Microsoft above to see OneDrive activity."
-          loadingLabel="OneDrive"
-          emptyLabel="No recent OneDrive files found."
-        >
-          {(items) => <FileRows items={items} />}
-        </Panel>
+            <Panel
+              title="Recent channel activity"
+              state={slack}
+              lockedHint="Connect Slack above to see channel activity."
+              loadingLabel="Slack"
+              emptyLabel="No recent channel activity found."
+            >
+              {(items) => <SlackRows items={items} teamId={slackTeam?.id ?? ""} />}
+            </Panel>
+          </div>
+        )}
 
         <div className="footer-note">
-          Live client-side view — nothing from Gmail, Drive, or Slack is ever
-          stored. Reload the page and you&rsquo;ll need to reconnect.
+          Live client-side view — nothing from Gmail, Drive, Outlook or Slack is
+          ever stored. Reload the page and you&rsquo;ll need to reconnect.
         </div>
       </div>
     </div>

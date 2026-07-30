@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CostOfMissedSignals from "@/components/CostOfMissedSignals";
 
 const description =
   "Aide Intelligence is priced against the systems you connect, the people who use it and the environment it runs in. Request a quote.";
@@ -73,6 +74,8 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      <CostOfMissedSignals />
 
       <section className="section">
         <div className="shell section-heading reveal">

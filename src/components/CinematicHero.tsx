@@ -58,7 +58,7 @@ export default function CinematicHero() {
           <br />
           <em>when it matters.</em>
         </h1>
-        <Link className="cine-cta" href="/login">
+        <Link className="cine-cta" href="/try-aide">
           Get Started
         </Link>
       </div>

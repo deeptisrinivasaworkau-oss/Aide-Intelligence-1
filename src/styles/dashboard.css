@@ -30,7 +30,9 @@
 .aide-dashboard .wrap {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 0 26px 70px;
+  /* Tight bottom so the summary lands inside one screen; the provider views
+     scroll anyway and don't need the extra run-off. */
+  padding: 0 26px 30px;
 }
 
 /* ---- Hero ---- */
@@ -40,7 +42,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 18px;
-  padding: 30px 26px 6px;
+  padding: 22px 26px 4px;
   max-width: 1160px;
   margin: 0 auto;
 }
@@ -112,14 +114,14 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--faint);
-  margin: 28px 4px 12px;
+  margin: 20px 4px 10px;
   font-weight: 600;
 }
 
 /* ---- KPI stat cards ---- */
 .aide-dashboard .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-bottom: 8px;
 }
@@ -127,7 +129,7 @@
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 18px 20px 20px;
+  padding: 15px 18px 17px;
   backdrop-filter: blur(6px);
 }
 .aide-dashboard .stat .label {
@@ -137,9 +139,9 @@
   color: var(--muted);
 }
 .aide-dashboard .stat .num {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 720;
-  margin-top: 10px;
+  margin-top: 6px;
   letter-spacing: -0.02em;
   color: #fff;
 }
@@ -147,7 +149,7 @@
   height: 4px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.08);
-  margin-top: 16px;
+  margin-top: 12px;
   overflow: hidden;
 }
 .aide-dashboard .stat .bar > i {
@@ -318,10 +320,10 @@
   margin: 12px 18px;
 }
 .aide-dashboard .footer-note {
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--faint);
   text-align: center;
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 @media (max-width: 900px) {
@@ -343,7 +345,7 @@
 
 /* Sample-data notice — must stay visible while illustrative content is shown. */
 .aide-dashboard .sample-banner{
-  margin:26px 0 0;padding:13px 16px;
+  margin:16px 0 0;padding:11px 15px;
   border:1px solid rgba(255,180,9,.28);border-radius:12px;
   background:rgba(255,180,9,.09);color:#e5c58a;
   font-size:12.5px;line-height:1.6}
@@ -355,7 +357,7 @@
    sub-brands beneath the active one. */
 
 .aide-dashboard .view-tabs{
-  display:flex;gap:4px;margin:34px 0 0;padding:5px;
+  display:flex;gap:4px;margin:22px 0 0;padding:5px;
   border:1px solid var(--border);border-radius:14px;
   background:var(--panel);backdrop-filter:blur(6px);
   overflow-x:auto;scrollbar-width:none}
@@ -375,7 +377,7 @@
   width:6px;height:6px;border-radius:50%;background:var(--teal);
   box-shadow:0 0 7px var(--teal)}
 
-.aide-dashboard .view-body{margin-top:24px}
+.aide-dashboard .view-body{margin-top:18px}
 
 /* ---- Sub-brand rows ---- */
 .aide-dashboard .source-list{
@@ -488,58 +490,84 @@
 :root[data-theme="light"] .aide-dashboard .source-warning{
   color:#a0202a;background:rgba(255,109,104,.10);border-color:rgba(160,32,42,.22)}
 
-/* ================= Briefing =================
-   Grouped by what the item asks of the reader. Severity is a left edge rather
-   than a fill, so five categories don't turn into five competing colours. */
-.aide-dashboard .brief-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.aide-dashboard .brief-sub{margin:0;color:var(--muted);font-size:13px}
-.aide-dashboard .brief{display:flex;flex-direction:column;gap:26px;margin-top:6px}
 
-.aide-dashboard .brief-group{
+/* ================= Briefing =================
+   One box per category, side by side, so the summary reads in a single screen
+   without scrolling. Boxes expand in place rather than lengthening the page.
+   Severity is a left edge, not a fill — three categories shouldn't become
+   three competing colour fields. */
+
+.aide-dashboard .brief-head{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.aide-dashboard .brief-sub{margin:0;color:var(--muted);font-size:12.5px}
+
+.aide-dashboard .brief-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  align-items:start;margin-top:4px}
+
+.aide-dashboard .brief-box{
+  display:flex;flex-direction:column;
   border:1px solid var(--border);border-radius:16px;overflow:hidden;
   background:var(--panel);backdrop-filter:blur(6px)}
-.aide-dashboard .brief-group-head{
-  display:grid;grid-template-columns:1fr auto;align-items:baseline;
-  gap:4px 12px;padding:17px 20px;border-bottom:1px solid var(--border)}
-.aide-dashboard .brief-group-head h2{
-  margin:0;font-size:14.5px;font-weight:650;color:var(--ink)}
-.aide-dashboard .brief-count{
-  font-size:12px;font-weight:600;color:var(--muted);
-  font-variant-numeric:tabular-nums}
-.aide-dashboard .brief-group-head p{
-  grid-column:1/-1;margin:0;font-size:11.5px;color:var(--faint)}
 
-.aide-dashboard .brief-items{list-style:none;margin:0;padding:0}
+.aide-dashboard .brief-box-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 16px;border-bottom:1px solid var(--border)}
+.aide-dashboard .brief-box-head h2{
+  margin:0;font-size:13.5px;font-weight:650;color:var(--ink)}
+.aide-dashboard .brief-count{
+  flex:none;min-width:22px;height:22px;padding:0 7px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:999px;background:rgba(255,255,255,.07);
+  font-size:11.5px;font-weight:650;color:var(--muted);
+  font-variant-numeric:tabular-nums}
+
+.aide-dashboard .brief-items{list-style:none;margin:0;padding:0;flex:1}
 .aide-dashboard .brief-item{
-  display:grid;grid-template-columns:1fr auto;gap:14px;
-  padding:15px 20px 15px 17px;border-bottom:1px solid var(--border);
+  padding:12px 16px 13px 14px;border-bottom:1px solid var(--border);
   border-left:3px solid transparent}
 .aide-dashboard .brief-item:last-child{border-bottom:0}
 .aide-dashboard .brief-item.sev-high{border-left-color:var(--coral)}
 .aide-dashboard .brief-item.sev-medium{border-left-color:var(--amber)}
-.aide-dashboard .brief-item.sev-low{border-left-color:transparent}
-.aide-dashboard .brief-main{min-width:0}
+
 .aide-dashboard .brief-headline{
-  margin:0;font-size:13.5px;font-weight:600;color:var(--ink);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.aide-dashboard .brief-detail{
-  margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55}
+  margin:0;font-size:13px;font-weight:600;line-height:1.4;color:var(--ink);
+  /* Two lines then ellipsis — keeps every box the same rhythm. */
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden}
 .aide-dashboard .brief-rec{
-  margin:7px 0 0;font-size:12px;font-weight:550;color:var(--teal)}
-.aide-dashboard .brief-meta{
-  display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none}
+  margin:6px 0 0;font-size:11.5px;font-weight:550;color:var(--teal);
+  line-height:1.45}
+.aide-dashboard .brief-foot{
+  display:flex;align-items:center;gap:8px;margin:9px 0 0}
 .aide-dashboard .brief-source{
-  font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;
+  font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;
   border:1px solid var(--border-strong);color:var(--muted);white-space:nowrap;
   transition:color .2s ease,border-color .2s ease}
 .aide-dashboard .brief-source:hover{color:var(--ink);border-color:var(--ink)}
-.aide-dashboard .brief-when{font-size:11px;color:var(--faint);white-space:nowrap}
+.aide-dashboard .brief-when{font-size:10.5px;color:var(--faint);white-space:nowrap}
+
+.aide-dashboard .brief-more{
+  width:100%;padding:11px 16px;border:0;border-top:1px solid var(--border);
+  background:none;color:var(--muted);font:inherit;font-size:11.5px;
+  font-weight:600;text-align:left;cursor:pointer;
+  transition:color .2s ease,background .2s ease}
+.aide-dashboard .brief-more:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+
 .aide-dashboard .brief-empty{
-  margin-top:8px;padding:40px 20px;text-align:center;color:var(--faint);
+  margin-top:8px;padding:38px 20px;text-align:center;color:var(--faint);
   font-size:13px;border:1px solid var(--border);border-radius:16px;
   background:var(--panel)}
 
-@media(max-width:620px){
-  .aide-dashboard .brief-item{grid-template-columns:1fr}
-  .aide-dashboard .brief-meta{flex-direction:row;align-items:center;gap:10px}
+/* Light-mode tweaks for the pieces that assume a dark ground. */
+:root[data-theme="light"] .aide-dashboard .brief-count{background:rgba(16,22,40,.06)}
+:root[data-theme="light"] .aide-dashboard .brief-more:hover{background:rgba(16,22,40,.035)}
+:root[data-theme="light"] .aide-dashboard .brief-rec{color:#0a7a68}
+
+@media(max-width:1000px){
+  .aide-dashboard .brief-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:680px){
+  .aide-dashboard .brief-grid{grid-template-columns:1fr}
+  .aide-dashboard .stats{grid-template-columns:1fr}
 }

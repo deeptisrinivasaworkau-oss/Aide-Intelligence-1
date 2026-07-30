@@ -436,11 +436,11 @@ export default function Dashboard() {
     slack: slack.items,
   });
 
+  // Just the two that drive a decision. File and channel counts are activity
+  // volume, not signal, and they competed with the briefing for attention.
   const STAT_CARDS = [
     { label: "Unread emails", value: stats.unread },
     { label: "Important / flagged", value: stats.important },
-    { label: "Drive files (7d)", value: stats.files },
-    { label: "Slack channels active", value: stats.slack },
   ];
 
   return (
@@ -521,33 +521,6 @@ export default function Dashboard() {
             </div>
             <Brief items={brief} />
 
-            <div className="summary-grid">
-              {(
-                [
-                  { id: "google", label: "Google", icon: <Icon.GoogleIcon />, panels: [mail, gcal, drive] },
-                  { id: "microsoft", label: "Microsoft", icon: <Icon.MicrosoftIcon />, panels: [outlook, mscal, onedrive] },
-                  { id: "slack", label: "Slack", icon: <Icon.SlackIcon />, panels: [slack] },
-                ] as const
-              ).map((group) => {
-                const live = group.panels.filter((p) => p.status === "ready");
-                const count = live.reduce((n, p) => n + p.items.length, 0);
-                return (
-                  <button
-                    className="summary-card"
-                    key={group.id}
-                    type="button"
-                    onClick={() => setView(group.id)}
-                  >
-                    <span className="summary-mark">{group.icon}</span>
-                    <span className="summary-name">{group.label}</span>
-                    <span className="summary-count">{count}</span>
-                    <span className="summary-state">
-                      {connected[group.id] ? "Connected" : "Not connected"}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
         )}
 

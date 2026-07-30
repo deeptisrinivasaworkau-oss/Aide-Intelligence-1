@@ -436,3 +436,110 @@
   .aide-dashboard .summary-grid{grid-template-columns:1fr}
   .aide-dashboard .view-tab{padding:10px 14px;font-size:13px}
 }
+
+/* ================= Light theme =================
+   The dashboard carries its own palette, so it needs its own light variant.
+   Only the tokens change; every rule above is written against them. */
+:root[data-theme="light"] .aide-dashboard{
+  --bg:#f7f8fb;
+  --bg-2:#eef1f7;
+  --panel:rgba(255,255,255,.78);
+  --panel-solid:#fff;
+  --border:rgba(16,22,40,.10);
+  --border-strong:rgba(16,22,40,.18);
+  --ink:#111527;
+  --muted:#5c6478;
+  --faint:#7d8598;
+  --teal:#00937f;
+  --amber:#b57500;
+  --accent:linear-gradient(120deg,#7b1fe0,#0057b8);
+  background:
+    radial-gradient(1100px 620px at 78% -8%, rgba(138,37,255,.07), transparent 60%),
+    radial-gradient(900px 560px at 8% 4%, rgba(0,107,223,.07), transparent 55%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+}
+/* Elements that were hardcoded white-on-dark need the light equivalent. */
+:root[data-theme="light"] .aide-dashboard .hero-text h1,
+:root[data-theme="light"] .aide-dashboard .stat .num,
+:root[data-theme="light"] .aide-dashboard .summary-count{color:var(--ink)}
+:root[data-theme="light"] .aide-dashboard .home-link{color:#1f5fd0}
+:root[data-theme="light"] .aide-dashboard .app-signout:hover,
+:root[data-theme="light"] .aide-dashboard .row:hover .subject,
+:root[data-theme="light"] .aide-dashboard .row:hover .sender{color:var(--ink)}
+:root[data-theme="light"] .aide-dashboard .subject{color:#3a4258}
+:root[data-theme="light"] .aide-dashboard .summary{color:#4a5268}
+:root[data-theme="light"] .aide-dashboard .verdict{color:#6b3fd4}
+:root[data-theme="light"] .aide-dashboard .avatar{background:rgba(123,31,224,.12);color:#6b3fd4}
+:root[data-theme="light"] .aide-dashboard .row:hover,
+:root[data-theme="light"] .aide-dashboard .view-tab:hover{background:rgba(16,22,40,.035)}
+:root[data-theme="light"] .aide-dashboard .view-tab.active{background:rgba(16,22,40,.07)}
+:root[data-theme="light"] .aide-dashboard .stat .bar,
+:root[data-theme="light"] .aide-dashboard .filetype,
+:root[data-theme="light"] .aide-dashboard .source-soon{background:rgba(16,22,40,.07)}
+:root[data-theme="light"] .aide-dashboard .source-mark,
+:root[data-theme="light"] .aide-dashboard .summary-mark{
+  background:#fff;box-shadow:inset 0 0 0 1px rgba(16,22,40,.08)}
+:root[data-theme="light"] .aide-dashboard .sample-banner{
+  border-color:rgba(181,117,0,.3);background:rgba(255,180,9,.10);color:#7a5200}
+:root[data-theme="light"] .aide-dashboard .sample-banner strong{color:#5d3e00}
+:root[data-theme="light"] .aide-dashboard .badge.unread{background:rgba(0,87,184,.12);color:#0a4fa8}
+:root[data-theme="light"] .aide-dashboard .badge.important{background:rgba(181,117,0,.14);color:#8a5a00}
+:root[data-theme="light"] .aide-dashboard .error,
+:root[data-theme="light"] .aide-dashboard .source-warning{
+  color:#a0202a;background:rgba(255,109,104,.10);border-color:rgba(160,32,42,.22)}
+
+/* ================= Briefing =================
+   Grouped by what the item asks of the reader. Severity is a left edge rather
+   than a fill, so five categories don't turn into five competing colours. */
+.aide-dashboard .brief-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.aide-dashboard .brief-sub{margin:0;color:var(--muted);font-size:13px}
+.aide-dashboard .brief{display:flex;flex-direction:column;gap:26px;margin-top:6px}
+
+.aide-dashboard .brief-group{
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;
+  background:var(--panel);backdrop-filter:blur(6px)}
+.aide-dashboard .brief-group-head{
+  display:grid;grid-template-columns:1fr auto;align-items:baseline;
+  gap:4px 12px;padding:17px 20px;border-bottom:1px solid var(--border)}
+.aide-dashboard .brief-group-head h2{
+  margin:0;font-size:14.5px;font-weight:650;color:var(--ink)}
+.aide-dashboard .brief-count{
+  font-size:12px;font-weight:600;color:var(--muted);
+  font-variant-numeric:tabular-nums}
+.aide-dashboard .brief-group-head p{
+  grid-column:1/-1;margin:0;font-size:11.5px;color:var(--faint)}
+
+.aide-dashboard .brief-items{list-style:none;margin:0;padding:0}
+.aide-dashboard .brief-item{
+  display:grid;grid-template-columns:1fr auto;gap:14px;
+  padding:15px 20px 15px 17px;border-bottom:1px solid var(--border);
+  border-left:3px solid transparent}
+.aide-dashboard .brief-item:last-child{border-bottom:0}
+.aide-dashboard .brief-item.sev-high{border-left-color:var(--coral)}
+.aide-dashboard .brief-item.sev-medium{border-left-color:var(--amber)}
+.aide-dashboard .brief-item.sev-low{border-left-color:transparent}
+.aide-dashboard .brief-main{min-width:0}
+.aide-dashboard .brief-headline{
+  margin:0;font-size:13.5px;font-weight:600;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aide-dashboard .brief-detail{
+  margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55}
+.aide-dashboard .brief-rec{
+  margin:7px 0 0;font-size:12px;font-weight:550;color:var(--teal)}
+.aide-dashboard .brief-meta{
+  display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none}
+.aide-dashboard .brief-source{
+  font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;
+  border:1px solid var(--border-strong);color:var(--muted);white-space:nowrap;
+  transition:color .2s ease,border-color .2s ease}
+.aide-dashboard .brief-source:hover{color:var(--ink);border-color:var(--ink)}
+.aide-dashboard .brief-when{font-size:11px;color:var(--faint);white-space:nowrap}
+.aide-dashboard .brief-empty{
+  margin-top:8px;padding:40px 20px;text-align:center;color:var(--faint);
+  font-size:13px;border:1px solid var(--border);border-radius:16px;
+  background:var(--panel)}
+
+@media(max-width:620px){
+  .aide-dashboard .brief-item{grid-template-columns:1fr}
+  .aide-dashboard .brief-meta{flex-direction:row;align-items:center;gap:10px}
+}

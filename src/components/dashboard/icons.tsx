@@ -22,30 +22,24 @@ export const GoogleIcon = () => (
 );
 
 export const SlackIcon = () => (
-  <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  // Official pinwheel mark. The earlier version dropped paths and carried
+  // stray transforms, which is why it rendered as scattered dots.
+  <svg viewBox="0 0 122.8 122.8" xmlns="http://www.w3.org/2000/svg">
+    <path
+      fill="#E01E5A"
+      d="M25.8 77.6a12.9 12.9 0 1 1-12.9-12.9h12.9v12.9zm6.5 0a12.9 12.9 0 0 1 25.8 0v32.3a12.9 12.9 0 0 1-25.8 0V77.6z"
+    />
     <path
       fill="#36C5F0"
-      d="M18.9 6.3a4.05 4.05 0 1 0 0 8.1h4.05v-4.05A4.05 4.05 0 0 0 18.9 6.3z"
+      d="M45.2 25.8a12.9 12.9 0 1 1 12.9-12.9v12.9H45.2zm0 6.5a12.9 12.9 0 0 1 0 25.8H12.9a12.9 12.9 0 0 1 0-25.8h32.3z"
     />
     <path
       fill="#2EB67D"
-      d="M10.8 18.9a4.05 4.05 0 1 0-8.1 0 4.05 4.05 0 0 0 4.05 4.05h4.05V18.9z"
-    />
-    <path
-      fill="#E01E5A"
-      d="M29.1 41.7a4.05 4.05 0 1 0 0-8.1h-4.05v4.05a4.05 4.05 0 0 0 4.05 4.05z"
-    />
-    <path
-      fill="#36C5F0"
-      d="M29.1 33.6a4.05 4.05 0 1 0 8.1 0 4.05 4.05 0 0 0-4.05-4.05H29.1v4.05z"
+      d="M97 45.2a12.9 12.9 0 1 1 12.9 12.9H97V45.2zm-6.5 0a12.9 12.9 0 0 1-25.8 0V12.9a12.9 12.9 0 0 1 25.8 0v32.3z"
     />
     <path
       fill="#ECB22E"
-      d="M6.3 29.1a4.05 4.05 0 1 0 8.1 0v-4.05h-4.05A4.05 4.05 0 0 0 6.3 29.1z"
-    />
-    <path
-      fill="#E01E5A"
-      d="M18.9 29.1a4.05 4.05 0 1 0 0 8.1 4.05 4.05 0 0 0 4.05-4.05V29.1H18.9z"
+      d="M77.6 97a12.9 12.9 0 1 1-12.9 12.9V97h12.9zm0-6.5a12.9 12.9 0 0 1 0-25.8h32.3a12.9 12.9 0 0 1 0 25.8H77.6z"
     />
   </svg>
 );

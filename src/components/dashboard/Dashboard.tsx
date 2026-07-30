@@ -50,6 +50,8 @@ import {
   SlackRows,
 } from "./panels";
 import ViewTabs, { type View } from "./DashboardTabs";
+import Brief from "./Brief";
+import { buildBrief } from "@/lib/dashboard/brief";
 import SourceRow from "./SourceRow";
 import * as Icon from "./icons";
 
@@ -422,12 +424,17 @@ export default function Dashboard() {
     slack: slackTeam !== null,
   };
 
-  // Merged cross-source view for the Summary tab: the whole point of the brief
-  // is one queue, so priorities are ranked across providers rather than per app.
-  const attention = [...mail.items, ...outlook.items]
-    .filter((m) => m.unread || m.important)
-    .sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime())
-    .slice(0, 5);
+  // The briefing the pitch promises: signals from every connected source
+  // classified into deadlines, risks, decisions, unusual activity and actions,
+  // each traceable back to the system it came from.
+  const brief = buildBrief({
+    mail: mail.items,
+    outlookMail: outlook.items,
+    events: gcal.items,
+    msEvents: mscal.items,
+    files: drive.items,
+    slack: slack.items,
+  });
 
   const STAT_CARDS = [
     { label: "Unread emails", value: stats.unread },
@@ -505,19 +512,14 @@ export default function Dashboard() {
         {/* ---------------- Summary ---------------- */}
         {view === "summary" && (
           <div className="view-body">
-            <Panel
-              title="Needs your attention"
-              state={{
-                status: "ready",
-                meta: `${attention.length} across all sources`,
-                items: attention,
-              }}
-              lockedHint=""
-              loadingLabel=""
-              emptyLabel="Nothing flagged right now."
-            >
-              {(items) => <MailRows items={items} />}
-            </Panel>
+            <div className="brief-head">
+              <div className="section-label">Your briefing</div>
+              <p className="brief-sub">
+                {brief.length} item{brief.length === 1 ? "" : "s"} across your
+                connected systems, ranked by what needs deciding.
+              </p>
+            </div>
+            <Brief items={brief} />
 
             <div className="summary-grid">
               {(
